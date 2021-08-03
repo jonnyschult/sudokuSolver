@@ -1,7 +1,7 @@
-import { disInf, puzzleMaker, sectioner } from "./functions";
+import { inferenceDS, puzzleMaker } from "./functions";
+import inferenceReductio from "./functions/inferenceReduction";
 import inputs from "./inputs";
-import { SectionedPuzzle, Square } from "./types";
 
 const puzzle = puzzleMaker(inputs);
-const sectionPuzzle = sectioner(puzzle);
-const inferredPuzzle = disInf(sectionPuzzle);
+const syllogizedPuzzle = inferenceDS(puzzle);
+const answeredPuzzle = inferenceReductio(syllogizedPuzzle);

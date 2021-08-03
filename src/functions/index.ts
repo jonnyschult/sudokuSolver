@@ -1,5 +1,4 @@
-import disInf from "./disInf";
+import inferenceDS from "./inferenceDS";
 import puzzleMaker from "./puzzleMaker";
-import sectioner from "./sectioner";
 
-export { disInf, puzzleMaker, sectioner };
+export { inferenceDS, puzzleMaker };

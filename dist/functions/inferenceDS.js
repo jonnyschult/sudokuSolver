@@ -1,20 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const winnowerDS = (section) => {
-    let assumedVals = [];
-    for (const square of section) {
-        if (square[Object.keys(square)[0]].length === 1) {
-            assumedVals.push(...square[Object.keys(square)[0]]);
-        }
-    }
-    const inferredSection = section.map((square) => {
-        if (square[Object.keys(square)[0]].length > 1) {
-            const updatedVals = square[Object.keys(square)[0]].filter((num) => !assumedVals.includes(num));
-            square[Object.keys(square)[0]] = updatedVals;
-        }
-        return square;
-    });
-    return inferredSection;
+const winnowerDS = (square, puzzle) => {
+    let col = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][3] === +Object.keys(square)[0][3]);
+    let row = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][1] === +Object.keys(square)[0][1]);
+    let box = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][5] === +Object.keys(square)[0][5]);
+    console.log(box, row, col);
 };
 const assertDS = (winSect) => {
     const possibleVals = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -42,12 +32,14 @@ const assertDS = (winSect) => {
     });
     return winSect;
 };
-const inferenceDS = (sectionedPuzzle) => {
-    for (const section in sectionedPuzzle) {
-        const winnowedSection = winnowerDS(sectionedPuzzle[section]);
-        const updatedSection = assertDS(winnowedSection);
-        sectionedPuzzle[section] = updatedSection;
+const syncer = () => { };
+const inferenceDS = (puzzle) => {
+    for (let i = 0; i < 1; i++) {
+        const updatedPuzzle = winnowerDS(puzzle[i], puzzle);
+        // const updatedSection = assertDS(winnowedSection);
+        // sectionedPuzzle[section] = updatedSection;
+        // console.log(`Box ${i + 1}:`, box);
     }
-    return sectionedPuzzle;
+    return puzzle;
 };
 exports.default = inferenceDS;

@@ -1,5 +1,5 @@
 import { Puzzle, Square } from "../types";
-// import inputsTemplate from "../tests/puzzleObj";
+import inputs from "../inputs";
 
 type fnType = (givenSquares: Square[]) => Puzzle;
 
@@ -7,22 +7,37 @@ const puzzleMaker: fnType = (givenSquares: Square[]) => {
   let puzzle: Puzzle = [...givenSquares];
   const givenSquaresKeys = givenSquares.map((square) => Object.keys(square)[0]);
 
-  let colArr: string[] = "abcdefghi".split("");
-  let row: number = 0;
+  let row: number = 1;
   let col: number = 1;
+  let box: number = 1;
   for (let i = 0; i < 81; i++) {
-    if (!givenSquaresKeys.includes(`${colArr[row]}${col}`)) {
+    if (!givenSquaresKeys.includes(`r${row}c${col}b${box}`)) {
       puzzle.push({
-        [`${colArr[row]}${col}`]: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [`r${row}c${col}b${box}`]: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       });
     }
+    // console.log(`r${row}c${col}b${box}`);
     col++;
     if (col > 9) {
       col = 1;
       row++;
     }
+    if ((i + 1) % 3 === 0) {
+      if (box === 3 && row < 4) {
+        box = 1;
+      } else if (box === 6 && row < 7) {
+        box = 4;
+      } else if (box === 9 && row <= 9) {
+        box = 7;
+      } else box++;
+    }
   }
-  return puzzle;
+  const sortedPuzzle = puzzle.sort((squareA, squareB) => {
+    if (Object.keys(squareA) < Object.keys(squareB)) {
+      return -1;
+    } else return 1;
+  });
+  return sortedPuzzle;
 };
 
 export default puzzleMaker;
