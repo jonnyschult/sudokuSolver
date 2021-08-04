@@ -1,44 +1,77 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const winnowerDS = (square, puzzle) => {
-    let col = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][3] === +Object.keys(square)[0][3]);
-    let row = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][1] === +Object.keys(square)[0][1]);
-    let box = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][5] === +Object.keys(square)[0][5]);
-    console.log(box, row, col);
-};
-const assertDS = (winSect) => {
-    const possibleVals = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    possibleVals.forEach((value) => {
-        let numOfPossPlaces = 0;
-        let possiblePlace = "";
-        let indexValue = 0;
-        for (const [i, square] of winSect.entries()) {
-            if (square[Object.keys(square)[0]].includes(value) &&
-                square[Object.keys(square)[0]].length === 1) {
-                break;
-            }
-            if (square[Object.keys(square)[0]].includes(value)) {
-                numOfPossPlaces++;
-                possiblePlace = Object.keys(square)[0];
-                indexValue = i;
-            }
-            if (numOfPossPlaces > 1) {
-                break;
-            }
-            if (i === 8 && numOfPossPlaces === 1) {
-                winSect[indexValue] = { [possiblePlace]: [value] };
-            }
-        }
+const prunerDS = (square, row, col, box) => {
+    let wasUpdated = false;
+    const determinedSquares = [...row, ...col, ...box].filter((sectionSquare) => sectionSquare[Object.keys(sectionSquare)[0]].length === 1 &&
+        Object.keys(sectionSquare)[0] !== Object.keys(square)[0]);
+    const unavailableValues = determinedSquares.map((determinedSquare) => {
+        return determinedSquare[Object.keys(determinedSquare)[0]][0];
     });
-    return winSect;
+    const updatedSquareValues = square[Object.keys(square)[0]].filter((number) => {
+        if (unavailableValues.includes(number)) {
+            wasUpdated = true;
+            return false;
+        }
+        else
+            return true;
+    });
+    square[Object.keys(square)[0]] = updatedSquareValues;
+    return [square, wasUpdated];
 };
-const syncer = () => { };
+const asserterDS = (square, row, col, box) => {
+    let updated = false;
+    let rowVals = row
+        .filter((rowSquare) => Object.keys(rowSquare)[0] !== Object.keys(square)[0])
+        .map((rowSquare) => rowSquare[Object.keys(rowSquare)[0]])
+        .flat();
+    let colVals = col
+        .filter((colSquare) => Object.keys(colSquare)[0] !== Object.keys(square)[0])
+        .map((colSquare) => colSquare[Object.keys(colSquare)[0]])
+        .flat();
+    let boxVals = box
+        .filter((boxSquare) => Object.keys(boxSquare)[0] !== Object.keys(square)[0])
+        .map((boxSquare) => boxSquare[Object.keys(boxSquare)[0]])
+        .flat();
+    for (let num of square[Object.keys(square)[0]]) {
+        if (!rowVals.includes(num) ||
+            !colVals.includes(num) ||
+            !boxVals.includes(num)) {
+            square[Object.keys(square)[0]] = [num];
+            updated = true;
+            break;
+        }
+    }
+    return [square, updated];
+};
 const inferenceDS = (puzzle) => {
-    for (let i = 0; i < 1; i++) {
-        const updatedPuzzle = winnowerDS(puzzle[i], puzzle);
-        // const updatedSection = assertDS(winnowedSection);
-        // sectionedPuzzle[section] = updatedSection;
-        // console.log(`Box ${i + 1}:`, box);
+    let puzzleUpdated = false;
+    let firstPass = true;
+    while (puzzleUpdated || firstPass) {
+        console.log("Looped");
+        let updatedThisLoop = false;
+        for (let i = 0; i < puzzle.length; i++) {
+            const square = puzzle[i];
+            let row = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][1] === +Object.keys(square)[0][1]);
+            let col = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][3] === +Object.keys(square)[0][3]);
+            let box = puzzle.filter((puzzleSqr) => +Object.keys(puzzleSqr)[0][5] === +Object.keys(square)[0][5]);
+            if (square[Object.keys(square)[0]].length > 1) {
+                const [assertedSquare, assertUpdated] = asserterDS(square, row, col, box);
+                if (assertUpdated) {
+                    updatedThisLoop = true;
+                    puzzle[i] = assertedSquare;
+                }
+                else {
+                    const [prunedSquare, pruneUpdated] = prunerDS(assertedSquare, row, col, box);
+                    if (pruneUpdated) {
+                        updatedThisLoop = true;
+                        puzzle[i] = prunedSquare;
+                    }
+                }
+            }
+            console.log(puzzle[i]);
+        }
+        puzzleUpdated = updatedThisLoop;
+        firstPass = false;
     }
     return puzzle;
 };
