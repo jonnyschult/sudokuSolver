@@ -1,22 +1,23 @@
 import { Puzzle, Square } from "../types";
 import inputs from "../inputs";
 
-type fnType = (givenSquares: Square[]) => Puzzle;
+type fnType = (puzzleString: string) => Puzzle;
 
-const puzzleMaker: fnType = (givenSquares: Square[]) => {
-  let puzzle: Puzzle = [...givenSquares];
-  const givenSquaresKeys = givenSquares.map((square) => Object.keys(square)[0]);
-
+const puzzleMaker: fnType = (puzzleString) => {
+  let puzzle: Puzzle = [];
   let row: number = 1;
   let col: number = 1;
   let box: number = 1;
   for (let i = 0; i < 81; i++) {
-    if (!givenSquaresKeys.includes(`r${row}c${col}b${box}`)) {
+    if (puzzleString[i] === "." || puzzleString[i] === "0") {
       puzzle.push({
         [`r${row}c${col}b${box}`]: [1, 2, 3, 4, 5, 6, 7, 8, 9],
       });
+    } else {
+      puzzle.push({
+        [`r${row}c${col}b${box}`]: [+puzzleString[i]],
+      });
     }
-    // console.log(`r${row}c${col}b${box}`);
     col++;
     if (col > 9) {
       col = 1;

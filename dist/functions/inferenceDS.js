@@ -47,7 +47,6 @@ const inferenceDS = (puzzle) => {
     let puzzleUpdated = false;
     let firstPass = true;
     while (puzzleUpdated || firstPass) {
-        console.log("Looped");
         let updatedThisLoop = false;
         for (let i = 0; i < puzzle.length; i++) {
             const square = puzzle[i];
@@ -68,7 +67,6 @@ const inferenceDS = (puzzle) => {
                     }
                 }
             }
-            console.log(puzzle[i]);
         }
         puzzleUpdated = updatedThisLoop;
         firstPass = false;

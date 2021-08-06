@@ -66,7 +66,6 @@ const inferenceDS: (puzzle: Puzzle) => Puzzle = (puzzle) => {
   let firstPass = true;
 
   while (puzzleUpdated || firstPass) {
-    console.log("Looped");
     let updatedThisLoop = false;
 
     for (let i = 0; i < puzzle.length; i++) {
@@ -106,7 +105,6 @@ const inferenceDS: (puzzle: Puzzle) => Puzzle = (puzzle) => {
           }
         }
       }
-      console.log(puzzle[i]);
     }
 
     puzzleUpdated = updatedThisLoop;

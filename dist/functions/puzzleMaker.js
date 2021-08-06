@@ -1,18 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const puzzleMaker = (givenSquares) => {
-    let puzzle = [...givenSquares];
-    const givenSquaresKeys = givenSquares.map((square) => Object.keys(square)[0]);
+const puzzleMaker = (puzzleString) => {
+    let puzzle = [];
     let row = 1;
     let col = 1;
     let box = 1;
     for (let i = 0; i < 81; i++) {
-        if (!givenSquaresKeys.includes(`r${row}c${col}b${box}`)) {
+        if (puzzleString[i] === "." || puzzleString[i] === "0") {
             puzzle.push({
                 [`r${row}c${col}b${box}`]: [1, 2, 3, 4, 5, 6, 7, 8, 9],
             });
         }
-        // console.log(`r${row}c${col}b${box}`);
+        else {
+            puzzle.push({
+                [`r${row}c${col}b${box}`]: [+puzzleString[i]],
+            });
+        }
         col++;
         if (col > 9) {
             col = 1;
