@@ -12,8 +12,8 @@ const solver = async () => {
         const testPuzzles = await functions_1.getPuzzles();
         console.log("Test starting");
         for (let [i, puzzleInfo] of testPuzzles.entries()) {
-            if (i % 10000 === 0) {
-                console.log(i / 10000);
+            if (i % 1000 === 0) {
+                console.log(`%{i / 10000}%`);
             }
             const testPuzzle = puzzleInfo[0];
             const solution = puzzleInfo[1];
