@@ -2,11 +2,9 @@
 
 ## Description
 
-This application is designed to solve any valid sudoku puzzle. It also comes with a testing option to run the program against puzzles with known solutions and an option to solve Al Escargot, the hardest known sudoku puzzle. Explanation of logic and motivation is below.
+This application is designed to solve any valid sudoku puzzle. It also comes with a testing option, which runs the program against puzzles with known solutions, and an option to solve Al Escargot, the hardest known sudoku puzzle. Explanation of logic and motivation is below.
 
-README is still a work in progress.
-
-Found an error, or had a puzzle which stumped the algorithm? Contact me at jonathon.schult@gmail.com
+Found an error or had a puzzle which stumped the algorithm? Contact me at jonathon.schult@gmail.com
 
 ## Using App
 
@@ -14,7 +12,7 @@ Found an error, or had a puzzle which stumped the algorithm? Contact me at jonat
 
 - Install dependencies
   - `npm install` or `yarn install`
-- Application is built in TypeScript, so we have to build the dist folder
+- Application is built in TypeScript, so user has to build the dist folder
   - `npm build` or `yarn build`
 - Run the application
   - `npm start` or `yarn start`
@@ -47,11 +45,11 @@ This starts a series of CLI prompts.
 
 ## Motivation
 
-Earlier this year, I had a stint of interest in sudoku puzzles. While solving them, I recognized an inference pattern known as disjunctive syllogism. However, when working on harder or expert level puzzles, it seemed that disjunctive syllogism was no longer sufficient to infer the solutions of the puzzles. After performing all the possible disjunctive syllogisms on the puzzles, there remained options. The next step was to assume the value of a square and then perform more disjunctive syllogisms, and making more assumptions if needed. If this pattern leads to a contradiction, you can infer that the assumed value cannot be correct and eliminate it. Glossing a bit, this process relies on indirect proof, also known as reductio ad absurdum. Indirect proof and disjunctive syllogism would seem to form the logical basis for sudoku puzzles. That is, all sudoku puzzles should be solvable by indirect proof and disjunctive syllogism. I wanted to test this algorithmically, so I decided to build this program.
+Earlier this year, I had a stint of interest in sudoku puzzles. While solving them, I recognized an inference pattern known as disjunctive syllogism. However, when working on harder or expert level puzzles, it seemed that disjunctive syllogism was no longer sufficient to infer the solutions of the puzzles. After performing all the possible disjunctive syllogisms on the puzzles, there remained options. The next step was to assume the value of a square and then perform the ensuing disjunctive syllogisms, making more assumptions as needed. If this pattern leads to a contradiction, you can infer that the assumed value cannot be correct and eliminate it. Glossing a bit, this process relies on indirect proof, also known as reductio ad absurdum. Indirect proof and disjunctive syllogism would seem to form the logical basis for sudoku puzzles. That is, all sudoku puzzles should be solvable by indirect proof and disjunctive syllogism. I wanted to test this algorithmically, so I decided to build this program.
 
 ## Logic of the Algorithm
 
-Below I give a gloss of the logic of the puzzle solving method this program uses. It doesn't get super technical, and some assumptions are taken for the sake of simplicity. Logic often times requires a lot of explicit argumentation which I am forgoing.
+Below I give a gloss of the logic of the puzzle-solving method this program uses. It doesn't get super technical, and some assumptions are made for the sake of simplicity. Logic often requires a lot of explicit argumentation which I am forgoing.
 
 ### Logically Significant Concepts
 
@@ -60,14 +58,14 @@ The square is the atomic element of a sudoku puzzle and holds the value which so
 
 - Square: (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9)
 
-It is important to note that if we know a square is (3 v 4 v 9), this implies the square is (~1 & ~2 & ~5 & ~6 & ~7 & ~8)--The "~" denotes "not", not a negative number--or ~(1 v 2 v 5 v 6 v 7 v 8) by DeMorgans inference law. Essentially, a square is or isn't a value. If all we know is that a square is (1 v 2 v 3 v 4 v 5 v 6 v 7 v 9), then we know that the square is ~8.
+It is important to note that if we know a square is (3 v 4 v 9), this implies the square is (~1 & ~2 & ~5 & ~6 & ~7 & ~8), where "~" denotes "not". This is equivalent to ~(1 v 2 v 5 v 6 v 7 v 8) by DeMorgans inference law. Essentially, a square is or isn't a value. If all we know is that a square is (1 v 2 v 3 v 4 v 5 v 6 v 7 v 9), then we know that the square is ~8.
 
 **Section**
-A section represents a logically interconnected group of squares. There are three types of sections, rows, columns and boxes. Each type has nine instances, rows 1-9, columns 1-9, and boxes 1-9. A completed section is a collection of distinct values 1-9. So, we can think of a section as
+A section represents a logically interconnected group of squares. There are three types of sections: rows, columns and boxes. Each type has nine instances: rows 1-9, columns 1-9, and boxes 1-9. A completed section is a collection of distinct values 1-9. So, we can think of a section as
 
 - Sections: (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9) & (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9). . .
 
-Since a section can only hold unique values, we can know that if eight squares all hold ~8 as a value, then the remaining square must hold 8. 8 must go somewhere. So if the section looks like (square one: ~8, square two: ~8, square three: ~8, square four: ~8, square five: ~8,square six: ~8, square seven: ~8,square square eight: ~8), then we know that square nine: 8 is true. The uniqueness constraint on a section also implies that for any section, a number of squares could hold a value n, but not more than one. For instance, square one could be 8 and square two could be eight, but not both.
+Since a section can only hold unique values, we can know that if eight squares all hold ~8 as a value, then the remaining square must hold 8; 8 must go somewhere. So if the section looks like (square one: ~8, square two: ~8, square three: ~8, square four: ~8, square five: ~8,square six: ~8, square seven: ~8,square square eight: ~8), then we know that square nine: 8 is true. The uniqueness constraint on a section also implies that for any section, a number of squares could hold a value n, but not more than one. For instance, square one could be 8 and square two could be eight, but not both.
 
 **Puzzle**
 A puzzle is the total collection of sections and squares. It has 27 sections and 81 squares. It must hold 9 instances for each of the numbers 1-9.
@@ -81,7 +79,7 @@ Disjunctive syllogism is an inference rule. In the philosophy of logic, an infer
 
 - A: Roses are red AND violets are blue.
 
-From the inference rule of simplicity, and self evidently, we can see that we can infer:
+From the inference rule of simplicity, and self evidently, we can infer:
 
 - Therefore B: Roses are red
 
@@ -89,7 +87,7 @@ If A and B are true, A follows. Inference rules are logically proven to be truth
 
 - A: The greatest marathoner is Eliud Kipchoge or Kenenisa Bekele
 
-Assume the following is true
+Assume the following is true:
 
 - B: The greatest marathoner is not Kenenisa Bekele
 
@@ -100,14 +98,14 @@ With disjunctive syllogism, we can infer:
 The truth of C is certain if A and B are true.
 
 **Indirect Proof**
-Indirect proof is a method of inference which relies on making an assumptionone can infer a true conclusionnot be true. Thus, if an assumption necessarily leads to a contradiction, then that assumption must be false. Given the conceptual limitations of sudoku, this method can be clearly applied when a section holds more than one instance of any value 1-9.
+Indirect proof is an inference rule which requires an assumption. If an assumption necessarily leads to a contradiction, then that assumption must be false. Given the conceptual limitations of sudoku, this method can be clearly applied when a section holds more than one instance of any value 1-9.
 
 ### Logic of the Functions
 
 The syllogizer and reductio functions are the essential logical functions of this algorithm and embody the abstract ideas which motivated this project. The syllogizer can be broken down into two functions which make it work, the prunerDS and asserterDS functions.
 
 **syllogizer**  
-Both the asserterDS and prunerDS perform disjunctive syllogism on logically important parts of the puzzle. They work from different conceptual focal points. The prunerDS function takes a square, finds its associated sections' known values and then prunes what possibilities remain. We know that a section is composed of squares whose values are the numbers 1-9, each number only being used once. So, for each square with a known value, Every other square in that section cannot hold that value.
+Both the asserterDS and prunerDS perform disjunctive syllogism on logically important parts of the puzzle. They work from different conceptual focal points. The prunerDS function takes a square, finds its associated sections' known values and then prunes what possibilities remain. We know that a section is composed of squares whose values are the numbers 1-9, each number only being used once. So, for each square with a known value, every other square in that section cannot hold that value.
 
 For example, lets consider square r1c1b1, that is the square at the intersection of the first row, column, and box. Lets say the puzzle we pass to the function doesn't have an assigned value for this square. So we can think of the square as this:
 
@@ -117,7 +115,7 @@ Naturally then, the associated sections are row one, column one and box one. Now
 
 - square r1c1b1 = 1 v 2 v 6 v 8
 
-Sometimes the sections may hold enough information to prune this down to one solution. In this case, that is not true, but eliminating five values is a big improvement. So, prunerDS takes the square as fundamental and compares it with all associated sections and their known values. Pruning the options for each square makes asserterDS possible.
+Sometimes the sections may hold enough information to prune this down to one solution. So, prunerDS takes the square as fundamental and compares it with all associated sections and their known values. Pruning the options for each square makes asserterDS possible.
 
 The asserterDS function, by comparison, takes an section as fundamental and then uses the possible values of the squares as a means to make an inference. For example, lets say we are looking at row one after it has gone through prunerDS and it's associated squares now look as follows:
 
@@ -131,13 +129,13 @@ The asserterDS function, by comparison, takes an section as fundamental and then
 - square r1c8b3 = 4
 - square r1c9b3 = 3 v 5 v 8
 
-We can look at each square in the first 8 columns and realize that they all imply ~8. Perhaps prunerDS was sufficient to give us a single value for each square except r1c4b2, r1c5b2, and r1c9b3. And lets say that eight is a known value somewhere in b2, thus eliminating 8 as a possible value for r1c4b2 and r1c5b2. We know that 8 must go in one of the nine places. Thus, by disjunctive syllogism we can see that 8 must go in r1c9b3. each square which without 8 as a possible or actual value essential hold ~8. For example, this would mean that r1c1b1 is equivalent to:
+We can look at each square in the first 8 columns and realize that they all imply ~8. Perhaps prunerDS was sufficient to give us a single value for each square except r1c4b2, r1c5b2, and r1c9b3. And lets say that eight is a known value somewhere in b2, thus eliminating 8 as a possible value for r1c4b2 and r1c5b2. We know that 8 must go in one of the nine places. Thus, by disjunctive syllogism, we can see that 8 must go in r1c9b3. Each square without 8 as a possible or actual value essentially holds ~8. For example, this would mean that r1c1b1 is equivalent to:
 
 - square r1c1b1 = 1 = (~2 & ~3 & ~4 & ~5 & ~6 & ~7 & ~8 & ~9) = ~(2 v 3 v 4 v 5 v 6 v 7 v 8 v 9)
 
 Since each square implicitly holds ~ 8 except square r1c9b3, it must contain 8 by disjunctive syllogism. To paraphrase Sherlock Holmes, _eliminate the impossible and what remains must be truth_.
 
-The syllogizer function tracks whether any changes were made to the puzzle when these functions are called on each square. Once it loops through the whole puzzle without making any changes, we know that the function has done all the work it can do and it returns the thoroughly syllogized puzzle. This is one of the salient places the logical connection of the whole puzzle is essential, since each section could impact another section, we need to know if any part of the puzzle was changed.
+The syllogizer function tracks whether any changes were made to the puzzle when these functions are called on each square. Once it loops through the whole puzzle without making any changes, we know that the function has done all the work it can do and it returns the thoroughly syllogized puzzle. This is one place where the logical connection of the whole puzzle is essential, since each section could impact another section, we need to know if any part of the puzzle was changed.
 
 **reductio**  
 For easy, medium and at least some hard puzzles (per the easybrain app), doing disjunctive syllogism enough times is sufficient to solve the puzzle. For harder, expert level puzzles, however, more is needed. The reductio function performs a sort of indirect proof on the squares of the puzzles to generate more known values.
@@ -148,10 +146,10 @@ Once the assumption is made, the algorithm assigns it to a deep copy of the puzz
 
 - Side note: The deep copy is necessary because if we were to simply update the puzzle passed as the argument to the function, it would change the value for the puzzle argument for every call of the recursive function. The puzzle is an array of squares, and an array is a reference type, thus it is stored in the heap, and the references all refer to that same address, thus changing the puzzle would change it in the heap and all references would then refer to that updated puzzle. The deep copy is essential because the array holds square objects, which are also reference types.
 
-The recursive call then starts once again with checking the validity of the puzzle and then whether it is complete. Three possible tracks are available.
+The recursive call then starts once again by checking the validity of the puzzle and whether it is complete. Three possible tracks are then available:
 
 - If it is valid and complete, the function returns the puzzle and a boolean saying that it is valid. At each recursive call, when the function is returned, if the boolean is true, the hypotheticalPuzzle is assigned as the value of the puzzle, and returned. This culminates with the solved puzzle being returned through the stack.
-- If the puzzle is valid but not complete, reductio generates another assumption and hypothetical puzzle, calls syllogizer again and makes a recursive call.
+- If the puzzle is valid but not complete, reductio generates another assumption and hypothetical puzzle, calls syllogizer again, and makes a recursive call.
 - If it is invalid, then the function removes the bad hypotheticalPuzzle from the puzzles tracking array, thus removing one assumption scope from the reductio, the bad assumption is updated, either by moving to the next value for that square, or if all possible values for that square have already been shown to lead to a contradiction, then by moving back to where a new, untried assumption is possible, removing each hypotheticalPuzzle associated with that assumption along the way. Finally, with the new assumption, it creates a new hypotheticalPuzzle and calls syllogizer and makes another recursive call.
 
 To make this a bit more explicit, heres an example. Suppose the puzzle has been syllogized and is now being passed to reductio. A square is found as a good place to start the assumption.
@@ -173,12 +171,12 @@ This will continue until one of three things happen. First, the recursive call c
 
 - Caveat, for the second option, there is another, disappointing, heuristic used. When the assumption array gets too large, the program returns that the puzzle is not well formed. The value of assumptions necessary to trigger this return is substantially higher than the number of assumptions needed to solve the hardest puzzle, but there is no logical or mathematical proof here.
 
-This algorithm can solve any sudoku currently known, based on 350,000 tests. Hypothetically, given what I know, a sudoku could require a number of assumptions large enough to exceed the call stack limit. I doubt this, and I would guess that no valid, well formed sudoku could require that many assumptions, but I cannot prove this. Someone probably could show this to be the case, but I did not in this algorithm. While this program can solve a sudoku, and tell you that it is not valid, it cannot tell you that it is well formed. It could solve a puzzle which has more than one answer. I believe this would be easily enough solvable. It would require making a minimal inference in reductio, as oppose to running until finding a solution. That is, the reductio method is over-eager. It returns a valid, complete puzzle without ever checking other assumptions. To solve this, have reductio only assert values when all other alternatives have shown to be a contradiction. Thus, a reduction which assumes a value and derives no contradiction would not return the puzzle, it would merely move to the next assumption and see if it could derive a contradiction. If it does, it asserts the other value. If it could not, that would imply the puzzle is not well-formed. This, however, is beyond the scope of my initial project.
-
 ## Auxiliary Info
 
-This program only utilizes one library, which is prompts, to make the user interface cleaner. It's a nice library. You can check them out [here](https://www.npmjs.com/package/prompts). There are more functions than just the sudoku-logic functions detailed above, but they merely make the program run smoother, perform specific tasks to complete the particular CLI commands, etc.
+This program only utilizes the prompts library as a dependency to make the user interface cleaner. It's a nice library. You can check them out [here](https://www.npmjs.com/package/prompts). There are more functions than just the sudoku-logic functions detailed above, but they merely make the program run smoother, perform specific tasks to complete the particular CLI commands, etc.
 
 ## Conclusion
 
-I had no prior experience with sudoku before deciding to build this app. It was a lot of fun to build and the literature on sudoku is interesting. Only after having built the algorithm just to solve a puzzle did the desire to make it able to test whether or not a puzzle is well-formed come upon to me, mainly because I just hadn't thought of it. Perhaps this extension will happen in the future. There is a lot more to learn about sudoku, and some of it may be necessary to make this a richer, handier app.
+This algorithm successfully solved 350,000 test puzzles and the hardest known sudoku. This provides inductively-based evidence that the logical principles structuring this algorithm are sufficient to solve any sudoku. Hypothetically, given what I know, a sudoku could require a number of assumptions large enough to exceed the call stack limit. I doubt this, and I would guess that no valid, well formed sudoku could require that many assumptions, but I cannot prove this. Someone probably could show this to be the case, but I did not in this algorithm. While this program can solve a sudoku and tell you that it is not valid, it cannot tell you that it is well formed, which is beyond the scope of the initial project.
+
+Sudoku has turned out to be a richer and more interesting concept than I had initially anticipated. It was a lot of fun to build this app, and learning as I went along has been rewarding.
