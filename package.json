@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --coverage ./src/tests"
+    "build": "tsc -b",
+    "start": "node ./dist/app.js"
   },
   "dependencies": {
     "prompts": "^2.4.1"
