@@ -1,5 +1,4 @@
 import { runTests, solver } from "./functions";
-import inferenceReductio from "./functions/reductio";
 import cliInput from "./cliInput";
 
 const app = async () => {

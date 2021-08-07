@@ -1,4 +1,4 @@
-import { Puzzle, Square } from "../types";
+import { Puzzle } from "../types";
 
 type fnType = (puzzleString: string) => Puzzle;
 
