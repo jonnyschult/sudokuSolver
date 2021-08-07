@@ -4,6 +4,10 @@
 
 This application is designed to solve any valid sudoku puzzle. It also comes with a testing option to run the program against puzzles with known solutions and an option to solve Al Escargot, the hardest known sudoku puzzle. Explanation of logic and motivation is below.
 
+README is still a work in progress.
+
+Found an error, or had a puzzle which stumped the algorithm? Contact me at jonathon.schult@gmail.com
+
 ## Using App
 
 ### Starting App
