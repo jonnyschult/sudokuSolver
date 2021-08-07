@@ -11,7 +11,7 @@ const cliInput: () => Promise<input> = async () => {
         "Would you like to enter a puzzle, test the program, or solve the worlds hardest sudoku?",
       choices: [
         {
-          title: "Manually enter puzzle",
+          title: "Manually Enter Puzzle",
           description: "Manually enter a puzzle to be solved",
           value: "manual",
         },
