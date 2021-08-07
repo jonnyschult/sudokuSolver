@@ -43,7 +43,7 @@ const asserterDS = (square, row, col, box) => {
     }
     return [square, updated];
 };
-const inferenceDS = (puzzle) => {
+const syllogizer = (puzzle) => {
     let puzzleUpdated = false;
     let firstPass = true;
     while (puzzleUpdated || firstPass) {
@@ -73,4 +73,4 @@ const inferenceDS = (puzzle) => {
     }
     return puzzle;
 };
-exports.default = inferenceDS;
+exports.default = syllogizer;

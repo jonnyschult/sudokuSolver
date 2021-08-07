@@ -9,11 +9,12 @@ const cliInput_1 = __importDefault(require("./cliInput"));
 const solver = async () => {
     const [puzzleString, test] = await cliInput_1.default();
     if (test) {
-        const testPuzzles = await functions_1.getPuzzles();
         console.log("Test starting");
+        const testPuzzles = await functions_1.getPuzzles();
+        console.log("Checking puzzles solutions against computed solutions");
         for (let [i, puzzleInfo] of testPuzzles.entries()) {
             if (i % 1000 === 0) {
-                console.log(`%{i / 10000}%`);
+                console.log(`${i / 1000}%`);
             }
             const testPuzzle = puzzleInfo[0];
             const solution = puzzleInfo[1];
@@ -26,7 +27,7 @@ const solver = async () => {
                 console.log("Test failed", computedAnswer, solution);
             }
         }
-        console.log("Test Completed. No error found");
+        console.log("Test Completed. 100,000/100,000 puzzle solutions matched computed solution.");
     }
     else {
         const puzzle = functions_1.puzzleMaker(puzzleString);

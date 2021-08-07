@@ -1,5 +1,4 @@
 import { Puzzle, Square } from "../types";
-import inputs from "../inputs";
 
 type fnType = (puzzleString: string) => Puzzle;
 
