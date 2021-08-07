@@ -18,7 +18,7 @@ const cliInput: () => Promise<input> = async () => {
         {
           title: "Test",
           description:
-            "Randomly select up too 1000 puzzles, out of 500,000, to test this program. Computed solutions are compared to known solutions.",
+            "Randomly select up too 1000 puzzles, out of 350,000, to test this program. Computed solutions are compared to known solutions.",
           value: "test",
         },
         {
