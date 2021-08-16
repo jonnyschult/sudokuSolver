@@ -86,7 +86,6 @@ const reductio: (
     }
     let isValid = validChecker(puzzle);
     const completed = completeChecker(puzzle);
-    let message = "";
 
     if (completed && isValid) {
       return [puzzle, isValid, "Solved!"];
@@ -104,14 +103,7 @@ const reductio: (
         ],
       };
       hypotheticalPuzzle = inferenceDS(hypotheticalPuzzle);
-      let [reductioPuzzle, valid, updatedMessage] = reductio(
-        hypotheticalPuzzle,
-        assumptions,
-        puzzles
-      );
-      puzzle = reductioPuzzle;
-      isValid = valid;
-      message = updatedMessage;
+      return reductio(hypotheticalPuzzle, assumptions, puzzles);
     } else {
       puzzles.pop();
       let currentAssumption = assumptions[assumptions.length - 1];
@@ -146,17 +138,8 @@ const reductio: (
         1;
       hypotheticalPuzzle[newAsmIndex] = newAssumption;
       hypotheticalPuzzle = inferenceDS(hypotheticalPuzzle);
-      let [reductioPuzzle, valid, updatedMessage] = reductio(
-        hypotheticalPuzzle,
-        assumptions,
-        puzzles
-      );
-      puzzle = reductioPuzzle;
-      isValid = valid;
-      message = updatedMessage;
+      return reductio(hypotheticalPuzzle, assumptions, puzzles);
     }
-
-    return [puzzle, isValid, message];
   } catch (error) {
     return [puzzle, false, "Puzzle is not valid."];
   }
