@@ -52,29 +52,28 @@ Earlier this year, I had a stint of interest in sudoku puzzles. While solving th
 Below I give a gloss of the logic of the puzzle-solving method this program uses. It doesn't get super technical, and some assumptions are made for the sake of simplicity. Logic often requires a lot of explicit argumentation which I am forgoing.
 
 ### Logically Significant Concepts
-
-**Square**
+#### Square
 The square is the atomic element of a sudoku puzzle and holds the value which solves the puzzle. Any undetermined square holds 9 possible values: 1, 2, 3, 4, 5, 6, 7, 8, and 9. In terms of logical connections, we can think of this as a disjunction. Let "v" represent the "or" connective. So, we can think of each square that isn't already determined as
 
 - Square: (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9)
 
 It is important to note that if we know a square is (3 v 4 v 9), this implies the square is (~1 & ~2 & ~5 & ~6 & ~7 & ~8), where "~" denotes "not". This is equivalent to ~(1 v 2 v 5 v 6 v 7 v 8) by DeMorgans inference law. Essentially, a square is or isn't a value. If all we know is that a square is (1 v 2 v 3 v 4 v 5 v 6 v 7 v 9), then we know that the square is ~8.
 
-**Section**
+#### Section
 A section represents a logically interconnected group of squares. There are three types of sections: rows, columns and boxes. Each type has nine instances: rows 1-9, columns 1-9, and boxes 1-9. A completed section is a collection of distinct values 1-9. So, we can think of a section as
 
 - Sections: (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9) & (1 v 2 v 3 v 4 v 5 v 6 v 7 v 8 v 9). . .
 
 Since a section can only hold unique values, we can know that if eight squares all hold ~8 as a value, then the remaining square must hold 8; 8 must go somewhere. So if the section looks like (square one: ~8, square two: ~8, square three: ~8, square four: ~8, square five: ~8,square six: ~8, square seven: ~8,square square eight: ~8), then we know that square nine: 8 is true. The uniqueness constraint on a section also implies that for any section, a number of squares could hold a value n, but not more than one. For instance, square one could be 8 and square two could be eight, but not both.
 
-**Puzzle**
+#### Puzzle
 A puzzle is the total collection of sections and squares. It has 27 sections and 81 squares. It must hold 9 instances for each of the numbers 1-9.
 
 ### Rules of Inference
 
 If you're familiar with rules of inference, or disjunctive syllogism and indirect proof, skip this section.
 
-**Disjunctive Syllogism**
+#### Disjunctive Syllogism
 Disjunctive syllogism is an inference rule. In the philosophy of logic, an inference rule allows you to infer a conclusion from a statement or series of statements. For example, assume the following statement is true:
 
 - A: Roses are red AND violets are blue.
@@ -97,14 +96,14 @@ With disjunctive syllogism, we can infer:
 
 The truth of C is certain if A and B are true.
 
-**Indirect Proof**
+#### Indirect Proof
 Indirect proof is an inference rule which requires an assumption. If an assumption necessarily leads to a contradiction, then that assumption must be false. Given the conceptual limitations of sudoku, this method can be clearly applied when a section holds more than one instance of any value 1-9.
 
 ### Logic of the Functions
 
 The syllogizer and reductio functions are the essential logical functions of this algorithm and embody the abstract ideas which motivated this project. The syllogizer can be broken down into two functions which make it work, the prunerDS and asserterDS functions.
 
-**syllogizer**  
+#### syllogizer
 Both the asserterDS and prunerDS perform disjunctive syllogism on logically important parts of the puzzle. They work from different conceptual focal points. The prunerDS function takes a square, finds its associated sections' known values and then prunes what possibilities remain. We know that a section is composed of squares whose values are the numbers 1-9, each number only being used once. So, for each square with a known value, every other square in that section cannot hold that value.
 
 For example, lets consider square r1c1b1, that is the square at the intersection of the first row, column, and box. Lets say the puzzle we pass to the function doesn't have an assigned value for this square. So we can think of the square as this:
@@ -137,7 +136,7 @@ Since each square implicitly holds ~ 8 except square r1c9b3, it must contain 8 b
 
 The syllogizer function tracks whether any changes were made to the puzzle when these functions are called on each square. Once it loops through the whole puzzle without making any changes, we know that the function has done all the work it can do and it returns the thoroughly syllogized puzzle. This is one place where the logical connection of the whole puzzle is essential, since each section could impact another section, we need to know if any part of the puzzle was changed.
 
-**reductio**  
+#### reductio
 For easy, medium and at least some hard puzzles (per the easybrain app), doing disjunctive syllogism enough times is sufficient to solve the puzzle. For harder, expert level puzzles, however, more is needed. The reductio function performs a sort of indirect proof on the squares of the puzzles to generate more known values.
 
 Reductio takes three arguments, a puzzle, an assumptions array, and an array of hypothetical puzzle states and is recursive. The function starts by ensuring that the puzzle passed to it is valid, by which I mean that the puzzle is not currently in an impossible state, or glossing, a contradiction, such as a row having two or more of the same number. If the puzzle is valid and incomplete, that is, has more than one possible answer on at least one square, then reductio proceeds to make an assumption. The assumption is a heuristic. It aims to make the best assumption possible given the hunch that the square with the least number of possible answers will be the best place to make an assumption. This isn't logically guaranteed, but it is a good starting point.
